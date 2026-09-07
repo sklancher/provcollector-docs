@@ -1,0 +1,62 @@
+{%- comment -%}
+  Sidebar footer: colour-scheme toggle. Pairs with the pre-paint bootstrap in
+  head_custom.html, which is what actually decides the scheme on load.
+
+  Just the Docs renders this include TWICE — once in components/sidebar.html for
+  the desktop view and once in components/footer.html for the mobile view — so
+  the markup carries no id, and the script guards against binding twice.
+{%- endcomment -%}
+<div class="pc-nav-footer">
+  <button type="button" class="pc-theme-toggle" data-pc-theme-toggle>
+    <span class="pc-theme-toggle__icon" aria-hidden="true"></span>
+    <span class="pc-theme-toggle__label">Theme</span>
+  </button>
+</div>
+
+<script>
+  (function () {
+    if (window.__pcThemeToggleBound) return;
+    window.__pcThemeToggleBound = true;
+
+    var DARK = 'provcollector-dark';
+    var LIGHT = 'provcollector';
+
+    function current() {
+      return document.documentElement.getAttribute('data-pc-theme') === DARK ? DARK : LIGHT;
+    }
+
+    function render() {
+      var dark = current() === DARK;
+      var buttons = document.querySelectorAll('[data-pc-theme-toggle]');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].querySelector('.pc-theme-toggle__icon').textContent = dark ? '◑' : '◐';
+        buttons[i].querySelector('.pc-theme-toggle__label').textContent = dark ? 'Dark' : 'Light';
+        buttons[i].setAttribute('aria-label', 'Switch to ' + (dark ? 'light' : 'dark') + ' theme');
+      }
+    }
+
+    function apply(theme) {
+      jtd.setTheme(theme);
+      document.documentElement.setAttribute('data-pc-theme', theme);
+      try {
+        localStorage.setItem('provcollector-theme', theme);
+      } catch (e) {
+        /* Preference simply will not persist. */
+      }
+      render();
+      // Mermaid bakes its palette in at render time, so the diagrams have to be
+      // drawn again rather than just restyled.
+      if (window.pcRenderMermaid) window.pcRenderMermaid();
+    }
+
+    // Delegated, so the copy of this button that renders later — the mobile one —
+    // is handled without a second listener.
+    document.addEventListener('click', function (e) {
+      var button = e.target.closest && e.target.closest('[data-pc-theme-toggle]');
+      if (button) apply(current() === DARK ? LIGHT : DARK);
+    });
+
+    render();
+    document.addEventListener('DOMContentLoaded', render);
+  })();
+</script>

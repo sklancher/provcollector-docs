@@ -1,0 +1,24 @@
+%% Why a PID is not an identity. Editable Mermaid source — see the notes at the
+%% top of architecture.mmd. Colours come from the active colour scheme, not from
+%% this file, and a bare "%%" line will break the parse.
+
+flowchart LR
+
+  subgraph a ["Identity a1b2… — matched on PID + start time 10:02:11"]
+    direction LR
+    e1["<b>ProcessStart</b><br/>PID 4312 · 10:02:11<br/><i>creates</i>"]
+    e2["<b>FileWrite</b><br/>PID 4312 · 10:14<br/><i>unifies</i>"]
+    e3["<b>ProcessStop</b><br/>PID 4312 · 10:39<br/><i>destroys</i>"]
+    e1 --> e2 --> e3
+  end
+
+  subgraph b ["Identity 9f3c… — matched on PID + start time 10:47:03"]
+    direction LR
+    e4["<b>ProcessStart</b><br/>PID 4312 · 10:47:03<br/><i>creates</i>"]
+    e5["<b>FileWrite</b><br/>PID 4312 · 10:52<br/><i>unifies</i>"]
+    e4 --> e5
+  end
+
+  e3 -. "identity expires · PID reused" .-> e4
+
+  class e1,e2,e3,e4,e5 event

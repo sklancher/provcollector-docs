@@ -1,0 +1,32 @@
+// ProvCollector — light scheme.
+// Built on top of Just the Docs' `light` scheme, which the theme imports first.
+
+$color-scheme: provcollector;
+
+// Brand palette
+$pc-teal-900: #06343a;
+$pc-teal-700: #0a5b64;
+$pc-teal-500: #0e7c88;
+$pc-teal-300: #4fb3bd;
+$pc-teal-050: #e8f4f5;
+$pc-amber-500: #b8791a;
+$pc-slate-900: #101a21;
+$pc-slate-700: #24333d;
+$pc-slate-300: #c3cdd4;
+$pc-slate-100: #eef2f4;
+$pc-slate-050: #f6f9fa;
+
+$body-background-color: #ffffff;
+$body-heading-color: $pc-slate-900;
+$body-text-color: #2b3a44;
+$link-color: $pc-teal-700;
+$nav-child-link-color: #3c4c57;
+$sidebar-color: $pc-slate-050;
+$border-color: #dde5e9;
+$base-button-color: #f2f6f8;
+$btn-primary-color: $pc-teal-700;
+$code-background-color: #f7fafb;
+$table-background-color: #ffffff;
+$search-background-color: #ffffff;
+$search-result-preview-color: #5a6b76;
+$feedback-color: darken($sidebar-color, 3%);

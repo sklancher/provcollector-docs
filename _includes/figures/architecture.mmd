@@ -1,0 +1,57 @@
+%% ProvCollector — the data plane, agent to graph. Editable Mermaid source.
+%% Preview at https://mermaid.live, in VS Code, or render with the Mermaid CLI:
+%%   npx -p @mermaid-js/mermaid-cli mmdc -i architecture.mmd -o architecture.svg
+%% Keep this file free of colours. The palette is applied at render time from the
+%% active colour scheme — see _includes/components/mermaid.html. Node appearance
+%% is chosen with the semantic classes at the bottom of the file.
+%% Two layout notes, both learned the hard way:
+%%   - never leave a bare "%%" line; Mermaid's comment stripper needs content
+%%     after the marker, so an empty one survives and breaks the parse;
+%%   - a subgraph's "direction" is ignored once it has edges crossing its border,
+%%     so keep subgraphs to things that are genuinely self-contained.
+
+flowchart TB
+
+  agent["<b>1 · Agent</b><br/>Windows: ETW + optional driver · Linux: <i>TODO</i><br/>"]
+
+  raw(["<code>RawEvents</code> Kafka topic"])
+
+  subgraph ep ["EventProcessor"]
+    order["<b>2 · Reordering</b><br/>Events buffered per agent to improve temporal ordering"]
+	resolve["<b>3 · Identity resolution</b><br/>Transient descriptors (PID, path, etc.) → stable UUIDs"]
+	changelog[("<b>Identity store</b><br/>Minimal descriptor to UUID mapping<br/>Identities expire after 7d (configurable)")]
+    datareduction["<b>4 · Data reduction modules</b><br/>In-flight reduction of redundant events"]
+	resolve <--> changelog
+    order --> resolve
+    resolve --> datareduction
+  end
+
+
+  processed(["<code>ProcessedEvents</code> Kafka topic"])
+
+  subgraph streamconsumers ["Stream consumers"]
+    throughput["<b>ThroughputMonitor</b><br/>Live rates, read from the Kafka<br/>topics rather than the database"]
+    writer["<b>5 · Database.Postgres.Writer</b><br/>Bulk insert nodes & edges"]
+  end
+
+
+  postgres[("<b>PostgreSQL 18</b><br/>nodes & edges tables")]
+
+  subgraph dbconsumers ["Database consumers"]
+	tracker["<b>6 · Tracker</b><br/>Batch CLI<br/>NetworkX JSON"]
+	visualizer["<b>6 · Visualizer</b><br/>Blazor Server<br/>Sigma.js graph"]
+	reporter["<b>6 · BotReporter</b><br/>DB statistics<br/>Slack reports"]
+  end
+  
+  agent --> raw
+  raw --> order
+  datareduction --> processed
+  processed --> writer
+  processed -.-> throughput
+  writer --> postgres
+  postgres -- "SQL · time-respecting traversal" --> tracker
+  postgres --> visualizer
+  postgres --> reporter
+
+  class raw,processed topic
+  class changelog,postgres store

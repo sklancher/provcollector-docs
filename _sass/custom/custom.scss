@@ -1,0 +1,361 @@
+// ---------------------------------------------------------------------------
+// ProvCollector site styles.
+//
+// Compiled once per colour scheme, so anything keyed on $color-scheme swaps
+// correctly when the theme toggle switches stylesheets.
+// ---------------------------------------------------------------------------
+
+// Light values first; the dark scheme overrides them below. Keeping every
+// colour in one place means the rest of the file never branches.
+$pc-accent:        #0a5b64;
+$pc-accent-soft:   #e8f4f5;
+$pc-accent-line:   #b6dde1;
+$pc-accent-hover:  #0e7c88;
+$pc-amber:         #a86f13;
+$pc-amber-soft:    #fdf4e0;
+$pc-surface:       #ffffff;
+$pc-surface-alt:   #f6f9fa;
+$pc-line:          #dde5e9;
+$pc-muted:         #5f7180;
+$pc-text-strong:   #101a21;
+$pc-text-body:     #3d4d59;
+$pc-on-accent:     #ffffff;
+
+@if $color-scheme == provcollector-dark {
+  $pc-accent:       #4fd1c5 !global;
+  $pc-accent-soft:  #14343a !global;
+  $pc-accent-line:  #2c5f66 !global;
+  $pc-accent-hover: #7fe0d6 !global;
+  $pc-amber:        #e0b24b !global;
+  $pc-amber-soft:   #33290f !global;
+  $pc-surface:      #161e24 !global;
+  $pc-surface-alt:  #0f151a !global;
+  $pc-line:         #253038 !global;
+  $pc-muted:        #93a3ac !global;
+  $pc-text-strong:  #eef4f6 !global;
+  $pc-text-body:    #c3cfd6 !global;
+  $pc-on-accent:    #08262b !global;
+}
+
+// --- Typography touch-ups --------------------------------------------------
+
+.main-content {
+  h1, h2, h3, h4, h5 { letter-spacing: -0.01em; }
+
+  h2 {
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid $pc-line;
+  }
+
+  table { font-size: 0.85em; }
+
+  th {
+    background-color: $pc-surface-alt;
+    font-weight: 600;
+  }
+
+  td code, th code, li code, p code {
+    font-size: 0.85em;
+  }
+}
+
+// --- Brand wordmark --------------------------------------------------------
+
+.pc-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.pc-brand__mark {
+  flex: none;
+
+  .pc-brand__plate { fill: $pc-accent-soft; stroke: $pc-accent-line; stroke-width: 1.5; }
+  .pc-brand__edge  { stroke: $pc-accent; stroke-width: 1.6; fill: none; }
+  .pc-brand__node  { fill: $pc-surface; stroke: $pc-accent; stroke-width: 1.6; }
+  .pc-brand__node--src { fill: $pc-accent; }
+}
+
+.pc-brand__text {
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: $pc-text-strong;
+
+  strong { font-weight: 700; color: $pc-accent; }
+}
+
+// --- Sidebar footer --------------------------------------------------------
+
+.pc-nav-footer {
+  padding: 0.75rem 0 0.25rem;
+}
+
+// --- Hero (home page) ------------------------------------------------------
+
+.pc-hero {
+  margin: 0 0 2.5rem;
+  padding: 2rem 2rem 2.25rem;
+  border: 1px solid $pc-accent-line;
+  border-radius: 10px;
+  background: linear-gradient(135deg, $pc-accent-soft 0%, $pc-surface 62%);
+
+  .pc-hero__eyebrow {
+    margin: 0 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $pc-accent;
+  }
+
+  h1 {
+    margin-top: 0;
+    margin-bottom: 0.6rem;
+    font-size: 2.1rem;
+    line-height: 1.15;
+  }
+
+  .pc-hero__lede {
+    max-width: 46rem;
+    margin: 0 0 1.4rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: $pc-text-body;
+  }
+
+  .pc-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+}
+
+// --- Buttons ---------------------------------------------------------------
+
+.pc-btn {
+  display: inline-block;
+  padding: 0.45rem 1.05rem;
+  border: 1px solid $pc-accent-line;
+  border-radius: 6px;
+  background-color: transparent;
+  color: $pc-accent !important;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  transition: background-color 120ms ease, border-color 120ms ease;
+
+  &:hover {
+    background-color: $pc-accent-soft;
+    border-color: $pc-accent;
+  }
+}
+
+.pc-btn--primary {
+  background-color: $pc-accent;
+  border-color: $pc-accent;
+  color: $pc-on-accent !important;
+
+  &:hover {
+    background-color: $pc-accent-hover;
+    border-color: $pc-accent-hover;
+  }
+}
+
+// The theme draws its own bullet with a ::before on every list item inside
+// .main-content, so the custom list layouts have to opt out explicitly.
+.pc-cards, .pc-stats, .pc-legend {
+  > li::before { content: none !important; display: none !important; }
+}
+
+// --- Card grid -------------------------------------------------------------
+
+.pc-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.9rem;
+  margin: 1.4rem 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.pc-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid $pc-line;
+  border-left: 3px solid $pc-accent;
+  border-radius: 8px;
+  background-color: $pc-surface;
+  margin: 0;
+  transition: border-color 120ms ease, transform 120ms ease;
+
+  &:hover { transform: translateY(-2px); }
+
+  .pc-card__title {
+    margin: 0 0 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+
+    a { text-decoration: none; }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: $pc-muted;
+  }
+
+  code { font-size: 0.78em; }
+}
+
+// --- Stat strip ------------------------------------------------------------
+
+.pc-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  margin: 1.5rem 0 2rem;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 0.85rem 1rem;
+    border: 1px solid $pc-line;
+    border-radius: 8px;
+    background-color: $pc-surface-alt;
+    margin: 0;
+  }
+
+  .pc-stats__value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: $pc-accent;
+  }
+
+  .pc-stats__label {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $pc-muted;
+  }
+}
+
+// --- Figures / diagrams ----------------------------------------------------
+
+.pc-figure {
+  margin: 1.75rem 0 2rem;
+  padding: 1.25rem;
+  border: 1px solid $pc-line;
+  border-radius: 10px;
+  background-color: $pc-surface-alt;
+  overflow-x: auto;
+
+  figcaption {
+    margin-top: 0.9rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid $pc-line;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: $pc-muted;
+  }
+}
+
+// Mermaid renders into this element and sizes the SVG itself, so the only job
+// left is to undo the code-block styling the theme would otherwise apply and to
+// hide the raw source between page load and first render.
+.pc-figure pre.mermaid {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  overflow: visible;
+  text-align: center;
+  min-height: 2rem;
+  color: transparent;
+
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+}
+
+// --- Legend ----------------------------------------------------------------
+
+.pc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+  color: $pc-muted;
+
+  li { margin: 0; display: flex; align-items: center; gap: 0.4rem; }
+}
+
+.pc-swatch {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 3px;
+  border: 1.5px solid $pc-accent;
+  background-color: $pc-accent-soft;
+}
+
+.pc-swatch--mgmt  { border-color: $pc-amber; background-color: $pc-amber-soft; }
+.pc-swatch--topic { border-color: $pc-accent; background-color: $pc-surface; border-radius: 999px; }
+.pc-swatch--store { border-color: $pc-muted; background-color: transparent; border-style: dashed; }
+
+// --- Theme toggle ----------------------------------------------------------
+
+.pc-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid $pc-line;
+  border-radius: 999px;
+  background-color: $pc-surface;
+  color: $pc-muted;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover { border-color: $pc-accent; color: $pc-accent; }
+}
+
+// --- Misc ------------------------------------------------------------------
+
+.pc-lead {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: $pc-muted;
+}
+
+.pc-kicker {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  background-color: $pc-accent-soft;
+  color: $pc-accent;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.main-content blockquote {
+  border-left: 3px solid $pc-accent-line;
+  color: $pc-muted;
+}

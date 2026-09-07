@@ -1,0 +1,25 @@
+{%- comment -%}
+  End-to-end architecture figure. The diagram itself is Mermaid, edited in
+  _includes/figures/architecture.mmd; this file only wraps it with the legend
+  and caption. Escaping matters: the source is dropped into a <pre>, so its
+  <br/> and <b> markup has to survive as text for Mermaid to parse.
+{%- endcomment -%}
+{%- capture architecture_mmd -%}{%- include figures/architecture.mmd -%}{%- endcapture -%}
+<figure class="pc-figure">
+  <pre class="mermaid">{{ architecture_mmd | escape }}</pre>
+
+  <ul class="pc-legend">
+    <li><span class="pc-swatch"></span> Service</li>
+    <li><span class="pc-swatch pc-swatch--topic"></span> Kafka topic</li>
+    <li><span class="pc-swatch pc-swatch--store"></span> Durable store</li>
+  </ul>
+
+  <figcaption>
+    <strong>Figure 1.</strong> The data plane as a set of independently
+    replaceable stages, joined by Kafka topics rather than direct calls. The
+    agent only produces events; reordering and identity resolution run inside the
+    <code>EventProcessor</code> middleware as separate stages with distinct
+    responsibilities; the database writer only simply materializes the resolved
+    graph into PostgreSQL. The final graph can be consumed from either the <code>ProcessedEvents</code> topic or the database.
+  </figcaption>
+</figure>

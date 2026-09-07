@@ -1,0 +1,35 @@
+{%- comment -%}
+  Extra head content: favicon, and the theme-preference bootstrap.
+
+  The bootstrap runs before first paint so a reader who chose the dark scheme
+  does not get a flash of the light one. It only rewrites the stylesheet href;
+  the toggle button itself lives in footer_custom.html.
+{%- endcomment -%}
+
+<link rel="icon" type="image/svg+xml" href="{{ '/assets/img/favicon.svg' | relative_url }}">
+<meta name="theme-color" content="#0a5b64">
+
+<script>
+  (function () {
+    try {
+      var stored = localStorage.getItem('provcollector-theme');
+      if (stored !== 'provcollector-dark' && stored !== 'provcollector') {
+        stored = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'provcollector-dark'
+          : 'provcollector';
+      }
+      document.documentElement.setAttribute('data-pc-theme', stored);
+      if (stored === 'provcollector-dark') {
+        var link = document.querySelector('link[rel=stylesheet]');
+        if (link) {
+          link.setAttribute(
+            'href',
+            '{{ "/assets/css/just-the-docs-provcollector-dark.css" | relative_url }}'
+          );
+        }
+      }
+    } catch (e) {
+      /* localStorage unavailable (private mode, blocked cookies) — keep the light scheme. */
+    }
+  })();
+</script>

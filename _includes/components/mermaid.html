@@ -1,0 +1,129 @@
+{%- comment -%}
+  Overrides the theme's Mermaid loader so that:
+
+    - diagrams may also be written as <pre class="mermaid">, which is what the
+      figure includes emit after pulling their source from a .mmd file;
+    - the palette follows the active colour scheme, and every diagram is
+      re-rendered when the theme toggle switches it.
+
+  Layout and behaviour options live in _includes/mermaid_config.js.
+{%- endcomment -%}
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@{{ site.mermaid.version }}/dist/mermaid.esm.min.mjs';
+
+  var SELECTOR = 'pre.mermaid, .language-mermaid';
+
+  // Mirrors the SCSS palettes in _sass/custom/custom.scss. Mermaid derives
+  // contrast colours arithmetically, so these have to be concrete values
+  // rather than CSS custom properties.
+  var PALETTES = {
+    'provcollector': {
+      accent: '#0a5b64',
+      accentSoft: '#e8f4f5',
+      accentLine: '#b6dde1',
+      amber: '#a86f13',
+      amberSoft: '#fdf4e0',
+      surface: '#ffffff',
+      surfaceAlt: '#f6f9fa',
+      line: '#dde5e9',
+      muted: '#5f7180',
+      textStrong: '#101a21',
+      textBody: '#2b3a44'
+    },
+    'provcollector-dark': {
+      accent: '#4fd1c5',
+      accentSoft: '#14343a',
+      accentLine: '#2c5f66',
+      amber: '#e0b24b',
+      amberSoft: '#33290f',
+      surface: '#161e24',
+      surfaceAlt: '#0f151a',
+      line: '#253038',
+      muted: '#93a3ac',
+      textStrong: '#eef4f6',
+      textBody: '#c3cfd6'
+    }
+  };
+
+  function palette() {
+    var theme = document.documentElement.getAttribute('data-pc-theme');
+    return PALETTES[theme] || PALETTES['provcollector'];
+  }
+
+  function config() {
+    var c = palette();
+    var base = {% include mermaid_config.js %};
+
+    base.theme = 'base';
+
+    base.themeVariables = {
+      background: c.surfaceAlt,
+      primaryColor: c.accentSoft,
+      primaryBorderColor: c.accent,
+      primaryTextColor: c.textStrong,
+      secondaryColor: c.surface,
+      secondaryBorderColor: c.line,
+      secondaryTextColor: c.textStrong,
+      tertiaryColor: c.surface,
+      tertiaryBorderColor: c.line,
+      tertiaryTextColor: c.textStrong,
+      mainBkg: c.accentSoft,
+      nodeBorder: c.accent,
+      nodeTextColor: c.textStrong,
+      lineColor: c.accent,
+      textColor: c.textBody,
+      clusterBkg: c.surface,
+      clusterBorder: c.line,
+      titleColor: c.muted,
+      edgeLabelBackground: c.surfaceAlt,
+      fontSize: '13px'
+    };
+
+    // Semantic classes assigned in the .mmd sources. Keeping them here rather
+    // than as classDef lines keeps the diagram sources colour-free.
+    base.themeCSS = [
+      '.edgeLabel, .edgeLabel p { color: ' + c.muted + '; font-size: 11px; }',
+      '.cluster-label, .cluster-label p { color: ' + c.muted + '; font-size: 11px;',
+      '  font-weight: 700; letter-spacing: 0.04em; }',
+
+      '.node.topic > rect, .node.topic > path, .node.topic > polygon {',
+      '  fill: ' + c.surface + '; stroke: ' + c.accent + '; }',
+
+      '.node.store > rect, .node.store > path, .node.store > polygon {',
+      '  fill: ' + c.surface + '; stroke: ' + c.muted + '; stroke-dasharray: 4 3; }',
+
+      '.node.management > rect, .node.management > path, .node.management > polygon {',
+      '  fill: ' + c.amberSoft + '; stroke: ' + c.amber + '; }',
+
+      '.node.event > rect { fill: ' + c.surface + '; stroke: ' + c.accent + '; }',
+
+      '.node.dataplane > rect, .node.dataplane > path, .node.dataplane > polygon {',
+      '  fill: ' + c.accentSoft + '; stroke: ' + c.accent + '; }',
+
+      'span.nodeLabel i { color: ' + c.muted + '; font-style: normal; font-size: 11px; }'
+    ].join('\n');
+
+    return base;
+  }
+
+  // Mermaid replaces the element's content with the rendered SVG, so the
+  // original source has to be kept somewhere a re-render can reach it.
+  var diagrams = [];
+  document.querySelectorAll(SELECTOR).forEach(function (el) {
+    diagrams.push({ el: el, source: el.textContent });
+  });
+
+  function render() {
+    diagrams.forEach(function (d) {
+      d.el.removeAttribute('data-processed');
+      d.el.textContent = d.source;
+    });
+    mermaid.initialize(config());
+    mermaid.run({ querySelector: SELECTOR });
+  }
+
+  // Called by the colour-scheme toggle in nav_footer_custom.html.
+  window.pcRenderMermaid = render;
+
+  render();
+</script>

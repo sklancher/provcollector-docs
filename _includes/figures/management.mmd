@@ -1,0 +1,27 @@
+%% ProvCollector — the management plane. Editable Mermaid source; see the notes
+%% at the top of architecture.mmd. Colours come from the active colour scheme.
+
+flowchart LR
+
+  subgraph host ["Monitored host"]
+    agent["<b>ProvCollector.Agent</b><br/>Collects provenance.<br/>Knows nothing about the fleet."]
+    updater["<b>ProvCollector.Updater</b><br/>Heartbeat, config delivery,<br/>verified package install."]
+  end
+
+  raw(["RawEvents → the data plane"])
+
+  fleet["<b>FleetServer</b><br/>Agent hub + operator API<br/><i>X-Api-Key checked before registration</i>"]
+
+  dashboard["<b>AgentDashboard</b><br/>Blazor operator UI<br/><i>no state of its own</i>"]
+
+  packages[("<b>Packages</b><br/>SHA-256 digest per package,<br/>verified before install")]
+
+  agent --> raw
+  updater <-- "SignalR · heartbeat, commands, logs" --> fleet
+  fleet <-- "HTTP · operator API" --> dashboard
+  fleet --- packages
+
+  class raw topic
+  class packages store
+  class agent dataplane
+  class updater,fleet,dashboard management

@@ -1,0 +1,25 @@
+// ProvCollector — dark scheme. Imports Just the Docs' `dark` scheme, then
+// re-tints it toward the ProvCollector palette.
+
+@import "./color_schemes/dark";
+
+$color-scheme: provcollector-dark;
+
+$pc-teal-300: #4fd1c5;
+$pc-teal-200: #7fe0d6;
+$pc-amber-300: #e0b24b;
+
+$body-background-color: #11171c;
+$body-heading-color: #eef4f6;
+$body-text-color: #c3cfd6;
+$link-color: $pc-teal-300;
+$nav-child-link-color: #aab8c0;
+$sidebar-color: #0c1216;
+$border-color: #253038;
+$base-button-color: #1c262d;
+$btn-primary-color: #0e7c88;
+$code-background-color: #0d1117;
+$table-background-color: #161e24;
+$search-background-color: #161e24;
+$search-result-preview-color: #93a3ac;
+$feedback-color: #0c1216;

@@ -1,0 +1,22 @@
+{%- comment -%}
+  The management plane. Diagram source: _includes/figures/management.mmd.
+{%- endcomment -%}
+{%- capture management_mmd -%}{%- include figures/management.mmd -%}{%- endcapture -%}
+<figure class="pc-figure">
+  <pre class="mermaid">{{ management_mmd | escape }}</pre>
+
+  <ul class="pc-legend">
+    <li><span class="pc-swatch"></span> Data plane</li>
+    <li><span class="pc-swatch pc-swatch--store"></span> Durable store</li>
+    <li><span class="pc-swatch pc-swatch--mgmt"></span> Management plane</li>
+  </ul>
+
+  <figcaption>
+    <strong>Figure 2.</strong> The updater runs beside the agent and shares
+    nothing with it but the host. Fleet control never touches
+    <code>RawEvents</code>, the processed stream or the database, so an operator
+    with dashboard access cannot read collected provenance — and the collection
+    path, which holds a write-only Kafka credential, cannot issue installer
+    instructions.
+  </figcaption>
+</figure>

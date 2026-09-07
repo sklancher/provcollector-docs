@@ -1,0 +1,17 @@
+{%- comment -%}
+  Why a PID is not an identity. Diagram source: _includes/figures/identity.mmd.
+{%- endcomment -%}
+{%- capture identity_mmd -%}{%- include figures/identity.mmd -%}{%- endcapture -%}
+<figure class="pc-figure">
+  <pre class="mermaid">{{ identity_mmd | escape }}</pre>
+
+  <figcaption>
+    <strong>Figure 3.</strong> Every one of these events names PID 4312, and the
+    OS is not lying — it reissued the number. What separates the two objects is a
+    stronger identifier evaluated first: <code>PID</code> together with the process
+    start time. <code>PID</code> alone, a weak identifier, is tried only when the
+    strong evidence is unavailable, and on its own it would have merged two
+    unrelated processes into one node and fabricated a path through the graph
+    between them.
+  </figcaption>
+</figure>
