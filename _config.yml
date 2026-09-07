@@ -111,3 +111,4 @@ exclude:
   - vendor
   - .jekyll-cache
   - README.md
+  - wrangler.toml
