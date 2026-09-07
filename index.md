@@ -72,9 +72,5 @@ stage in more detail.
     <p class="pc-card__title"><a href="{{ '/reference/' | relative_url }}">Reference</a></p>
     <p>Tracker CLI options, event and object type registries, and the settings that matter in production.</p>
   </li>
-  <li class="pc-card">
-    <p class="pc-card__title"><a href="{{ '/meta/faq/' | relative_url }}">FAQ</a></p>
-    <p>The questions that come up most: coverage gaps, retention, why PIDs are not identities.</p>
-  </li>
 </ul>
 
